@@ -1,2 +1,1 @@
-# Quiz-Buzzer
-Lockout Quiz Buzzer
+Lockout quiz buzzer using pygame and keyboard inputs
