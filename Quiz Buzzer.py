@@ -11,7 +11,12 @@ from pygame.locals import *
 
 
 pygame.init() # initialize the game engine
+pygame.mixer.init()
 
+#define sounds
+
+player1_buzzer = pygame.mixer.Sound('buzzer1.wav')
+player2_buzzer = pygame.mixer.Sound('buzzer2.wav')
 
 #define colours
 
@@ -27,17 +32,20 @@ player1_name = input("Enter name for Player 1: ")
 player2_name = input("Enter name for Player 2: ")
 player3_name = input("Enter name for Player 3: ")
 player4_name = input("Enter name for Player 4: ")
+
+#initial state for player scores
+
+p1_score=0
+p2_score=0
+p3_score=0
+p4_score=0
  
 
 #set height and width of screen
 
-#size = [800, 600]
+size = [800, 600]
 
-#screen = pygame.display.set_mode(size)
-
-
-screen = pygame.display.set_mode((0,0), pygame.RESIZABLE) 
-
+screen = pygame.display.set_mode(size)
 screen.fill(white) # fill screen white
 
  
@@ -72,7 +80,7 @@ pygame.draw.rect(screen, black, (400,200,150,150), 0)
 
 pygame.draw.rect(screen, black, (590,200,150,150), 0)
 
-#add title andplayernames to screeen
+#add title and player names to screeen
 
 screen.blit(label, (10,10))
 
@@ -105,10 +113,11 @@ while True: #loop until quit
 
       if event.type == pygame.QUIT:
 
-        pygame.quit() # break out of loop
+        pygame.quit()
+        sys.exit()# break out of loop
 
       #if event.key == pygame.K_LCTRL or K_RCTRL and K_q:
-        pygame.quit()
+        #pygame.quit()
         
 
       if event.type == pygame.KEYDOWN:# and lockout == False:
@@ -118,7 +127,7 @@ while True: #loop until quit
           print("Left Key Pressed") #print to console
 
           pygame.draw.rect(screen, red, (20,200,150,150) , 0)
-
+          player1_buzzer.play()
           lockout=True
 
         if event.key == pygame.K_RIGHT: #and lockout == False:
@@ -126,7 +135,7 @@ while True: #loop until quit
           print("Right Key Pressed") #print to console
 
           pygame.draw.rect(screen, red, (210,200,150,150) , 0)
-
+          player2_buzzer.play()
           lockout=1
 
         if event.key == pygame.K_UP:# and lockout == False:
@@ -160,5 +169,3 @@ while True: #loop until quit
 
       pygame.display.flip()
 
-pygame.quit() #quit game
-sys.exit(0)
