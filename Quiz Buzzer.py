@@ -26,12 +26,16 @@ white = [255, 255, 255]
 
 red = [255, 0, 0]
 
+green = [0, 255, 0]
+
 #input for player names (console)
 
 player1_name = input("Enter name for Player 1: ")
 player2_name = input("Enter name for Player 2: ")
 player3_name = input("Enter name for Player 3: ")
 player4_name = input("Enter name for Player 4: ")
+
+#p1_key =
 
 #initial state for player scores
 
@@ -70,15 +74,16 @@ player4 = myfont.render(player4_name, 1, black)
 
 label = myfont.render("Quiz Buttons", 1, black)
 
-#draw boxes on screen
+#function for black squares
 
-pygame.draw.rect(screen, black, (20,200,150,150), 0)
+def black_sq():
+  pygame.draw.rect(screen, black, (20,200,150,150), 0)
 
-pygame.draw.rect(screen, black, (210,200,150,150), 0)
+  pygame.draw.rect(screen, black, (210,200,150,150), 0)
 
-pygame.draw.rect(screen, black, (400,200,150,150), 0)
+  pygame.draw.rect(screen, black, (400,200,150,150), 0)
 
-pygame.draw.rect(screen, black, (590,200,150,150), 0)
+  pygame.draw.rect(screen, black, (590,200,150,150), 0)
 
 #add title and player names to screeen
 
@@ -92,7 +97,8 @@ screen.blit(player3, (430,150))
 
 screen.blit(player4, (620,150))
 
- 
+#draw black squares
+black_sq()
 
 #show environment
 
@@ -118,9 +124,9 @@ while True: #loop until quit
 
       #if event.key == pygame.K_LCTRL or K_RCTRL and K_q:
         #pygame.quit()
-        
 
-      if event.type == pygame.KEYDOWN:# and lockout == False:
+
+      if event.type == pygame.KEYDOWN:
 
         if event.key == pygame.K_LEFT and lockout == False:
 
@@ -155,17 +161,12 @@ while True: #loop until quit
           lockout=True
           
   if lockout == True: #when buzzer has been pressed and buzzers are locked out
-    
+
+    #reset buzzers and make all squares black
     for event in pygame.event.get():
       if event.key == pygame.K_RETURN:
         lockout=False
-        pygame.draw.rect(screen, black, (20,200,150,150), 0)
-
-        pygame.draw.rect(screen, black, (210,200,150,150), 0)
-
-        pygame.draw.rect(screen, black, (400,200,150,150), 0)
-
-        pygame.draw.rect(screen, black, (590,200,150,150), 0)
+        black_sq()
 
       pygame.display.flip()
 
