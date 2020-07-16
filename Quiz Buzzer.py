@@ -28,23 +28,6 @@ red = [255, 0, 0]
 
 green = [0, 255, 0]
 
-#input for player names (console)
-
-player1_name = input("Enter name for Player 1: ")
-player2_name = input("Enter name for Player 2: ")
-player3_name = input("Enter name for Player 3: ")
-player4_name = input("Enter name for Player 4: ")
-
-#p1_key =
-
-#initial state for player scores
-
-p1_score=0
-p2_score=0
-p3_score=0
-p4_score=0
- 
-
 #set height and width of screen
 
 size = [800, 600]
@@ -52,22 +35,58 @@ size = [800, 600]
 screen = pygame.display.set_mode(size)
 screen.fill(white) # fill screen white
 
- 
-# set caption
-pygame.display.set_caption("Quiz Buzzer")
-
- 
 #definte font
 myfont = pygame.font.SysFont("Ariel", 30)
 
 
+#define function for entering player name
+def name(p_number):
+
+  name =""
+  while True:
+    for evt in pygame.event.get():
+      if evt.type == KEYDOWN:
+        if evt.unicode.isalpha():
+          name += evt.unicode
+        elif evt.key == K_BACKSPACE:
+          name = name[:-1]
+        elif evt.key == K_RETURN:
+          return name
+    screen.fill((0, 0, 0))
+    block = myfont.render(name, True, (255, 255, 255))
+    rect = block.get_rect()
+    rect.center = screen.get_rect().center
+    screen.blit(block, rect)
+    title = myfont.render("Enter Name of Player " + str(p_number), 1, white)
+    screen.blit(title, (10, 10))
+    pygame.display.flip()
+
+
+#input for player names (console)
+
+player1_name = name(1)#input("Enter name for Player 1: ")
+player2_name = name(2)#input("Enter name for Player 2: ")
+player3_name = name(3)#input("Enter name for Player 3: ")
+player4_name = name(4)#input("Enter name for Player 4: ")
+
+screen.fill(white) # fill screen white
+pygame.display.flip()
+
+#initial state for player scores
+
+p1_score=0
+p2_score=0
+p3_score=0
+p4_score=0
+
+# set caption
+pygame.display.set_caption("Quiz Buzzer")
+
+#set player name styles
 
 player1= myfont.render(player1_name, 1, black)
-
 player2 = myfont.render(player2_name, 1, black)
-
 player3 = myfont.render(player3_name, 1, black)
-
 player4 = myfont.render(player4_name, 1, black)
 
 #set title
@@ -78,11 +97,8 @@ label = myfont.render("Quiz Buttons", 1, black)
 
 def black_sq():
   pygame.draw.rect(screen, black, (20,200,150,150), 0)
-
   pygame.draw.rect(screen, black, (210,200,150,150), 0)
-
   pygame.draw.rect(screen, black, (400,200,150,150), 0)
-
   pygame.draw.rect(screen, black, (590,200,150,150), 0)
 
 #add title and player names to screeen
@@ -124,7 +140,6 @@ while True: #loop until quit
 
       #if event.key == pygame.K_LCTRL or K_RCTRL and K_q:
         #pygame.quit()
-
 
       if event.type == pygame.KEYDOWN:
 
@@ -169,4 +184,6 @@ while True: #loop until quit
         black_sq()
 
       pygame.display.flip()
+
+
 
