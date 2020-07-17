@@ -21,11 +21,8 @@ player2_buzzer = pygame.mixer.Sound('buzzer2.wav')
 #define colours
 
 black = [0, 0, 0]
-
 white = [255, 255, 255]
-
 red = [255, 0, 0]
-
 green = [0, 255, 0]
 
 #set height and width of screen
@@ -35,9 +32,12 @@ size = [800, 600]
 screen = pygame.display.set_mode(size)
 screen.fill(white) # fill screen white
 
+# set caption
+pygame.display.set_caption("JBHOG")
+
 #definte font
 myfont = pygame.font.SysFont("Ariel", 30)
-
+name_font = pygame.font.SysFont("Ariel", 120)
 
 #define function for entering player name
 def name(p_number):
@@ -45,6 +45,9 @@ def name(p_number):
   name =""
   while True:
     for evt in pygame.event.get():
+      if evt.type == pygame.QUIT:
+        pygame.quit()
+        sys.exit()# break out of loop
       if evt.type == KEYDOWN:
         if evt.unicode.isalpha():
           name += evt.unicode
@@ -53,7 +56,7 @@ def name(p_number):
         elif evt.key == K_RETURN:
           return name
     screen.fill((0, 0, 0))
-    block = myfont.render(name, True, (255, 255, 255))
+    block = name_font.render(name, True, (255, 255, 255))
     rect = block.get_rect()
     rect.center = screen.get_rect().center
     screen.blit(block, rect)
@@ -79,19 +82,16 @@ p2_score=0
 p3_score=0
 p4_score=0
 
-# set caption
-pygame.display.set_caption("Quiz Buzzer")
-
 #set player name styles
 
-player1= myfont.render(player1_name, 1, black)
+player1 = myfont.render(player1_name, 1, black)
 player2 = myfont.render(player2_name, 1, black)
 player3 = myfont.render(player3_name, 1, black)
 player4 = myfont.render(player4_name, 1, black)
 
 #set title
 
-label = myfont.render("Quiz Buttons", 1, black)
+label = myfont.render("Jack Balmer's House of Games", 1, black)
 
 #function for black squares
 
@@ -119,8 +119,6 @@ black_sq()
 #show environment
 
 pygame.display.flip()
-
- 
 
 lockout = False # set initial state for lockout
 
