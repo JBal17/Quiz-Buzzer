@@ -26,8 +26,10 @@ blue = [0, 0, 255]
 yellow = [255, 255, 0]
 
 #set height and width of screen
+screen_width = 800
+screen_height = 600
 
-size = [800, 600]
+size = [screen_width, screen_height]
 
 screen = pygame.display.set_mode(size)
 
@@ -35,7 +37,8 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Lockout Quiz Buzzer")
 
 #definte fonts
-myfont = pygame.font.SysFont("Ariel", 30)
+font_title = pygame.font.SysFont("Ariel", 60)
+myfont = pygame.font.SysFont("Ariel", 90)
 name_font = pygame.font.SysFont("Ariel", 170)
 
 #define function for entering player name
@@ -59,7 +62,7 @@ def name(p_number):
     rect = block.get_rect()
     rect.center = screen.get_rect().center
     screen.blit(block, rect)
-    title = myfont.render("Enter Name of Player " + str(p_number), 1, white)
+    title = font_title.render("Enter Name of Player " + str(p_number), 1, white)
     screen.blit(title, (10, 10))
     pygame.display.flip()
 
@@ -97,7 +100,12 @@ score4 = myfont.render(str(p4_score), 1, black)
 
 #set title
 
-label = myfont.render("Quiz Buzzer", 1, black)
+label = font_title.render("Quiz Buzzer", 1, black)
+
+# initialise joystick buttons
+
+j = pygame.joystick.Joystick(0)
+j.init()
 
 #function for black squares
 
@@ -109,14 +117,12 @@ def black_sq():
 
 #add title player names and scores to screeen
 
-
-
 def display_scores():
-  pygame.draw.rect(screen, white, (50,380,700,60), 0)
-  screen.blit(myfont.render(str(p1_score), 1, black), (95,400))
-  screen.blit(myfont.render(str(p2_score), 1, black), (285,400))
-  screen.blit(myfont.render(str(p3_score), 1, black), (475,400))
-  screen.blit(myfont.render(str(p4_score), 1, black), (665,400))
+  pygame.draw.rect(screen, white, (600,110,200,480), 0)
+  screen.blit(myfont.render(str(p1_score), 1, black), (600,110))
+  screen.blit(myfont.render(str(p2_score), 1, black), (600,240))
+  screen.blit(myfont.render(str(p3_score), 1, black), (600,370))
+  screen.blit(myfont.render(str(p4_score), 1, black), (600,500))
   pygame.display.flip()
 
 #display name of player who buzzed
@@ -132,14 +138,13 @@ def buzz(name, bg_colour, text_colour):
 #default screen view
 def mainscreen():
   screen.fill(white)
-  screen.blit(label, (10, 10)) #add title
+  screen.blit(label, (100, 10)) #add title
   #add player names
-  screen.blit(player1, (75, 150))
-  screen.blit(player2, (265, 150))
-  screen.blit(player3, (455, 150))
-  screen.blit(player4, (645, 150))
+  screen.blit(player1, (100, 110))
+  screen.blit(player2, (100, 240))
+  screen.blit(player3, (100, 370))
+  screen.blit(player4, (100, 500))
 
-  black_sq() # draw black squares
   display_scores()
   pygame.display.flip() #show environment
 
@@ -148,79 +153,157 @@ def mainscreen():
 
   #keypresses and outputs
 def main():
+
   lockout = False
   mainscreen()
   while True: #loop until quit
 
     if lockout == False:#when buzzers are in play
 
+
       for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-          pygame.quit()
-          sys.exit()# break out of loop
-
-        #if event.key == pygame.K_LCTRL or K_RCTRL and K_q:
-          #pygame.quit()
+            pygame.quit()
+            sys.exit()# break out of loop
 
         if event.type == pygame.KEYDOWN:
 
-          if event.key == pygame.K_LEFT:
-            print("Left Key Pressed") #print to console
-            #pygame.draw.rect(screen, red, (20,200,150,150), 0)
+          if event.key == pygame.K_1:
+              global p1_score
+              p1_score += 1
+              print('P1 score +1!')
+
+          if event.key == pygame.K_2:
+              global p2_score
+              p2_score += 1
+              print('P2 score +1!')
+
+          if event.key == pygame.K_3:
+              global p3_score
+              p3_score += 1
+              print('P3 score +1!')
+
+          if event.key == pygame.K_4:
+              global p4_score
+              p4_score += 1
+              print('P4 score +1!')
+
+          if event.key == pygame.K_F1:
+              p1_score -= 1
+              print('P1 score -1!')
+
+          if event.key == pygame.K_F2:
+              p2_score -= 1
+              print('P2 score -1!')
+
+          if event.key == pygame.K_F3:
+              p3_score -= 1
+              print('P3 score -1!')
+
+          if event.key == pygame.K_F4:
+              p4_score -= 1
+              print('P4 score -1!')
+
+        display_scores()
+
+
+        if event.type == pygame.JOYBUTTONDOWN:
+          print("Button Pressed")
+
+          if j.get_button(0):
+            print("BUTTON 0")
             buzz(player1_name, red, black)
             player1_buzzer.play()
             lockout = True
 
-          if event.key == pygame.K_RIGHT:
-            print("Right Key Pressed") #print to console
-            #pygame.draw.rect(screen, red, (210,200,150,150), 0)
+          if j.get_button(1):
+            print("BUTTON 1")
             buzz(player2_name, green, black)
             player2_buzzer.play()
             lockout = True
 
-          if event.key == pygame.K_UP:
-            print("Up Key Pressed") #print to console
-            #pygame.draw.rect(screen, red, (400,200,150,150), 0)
+          if j.get_button(2):
+            print("BUTTON 2")
             buzz(player3_name, yellow, black)
             lockout = True
 
-          if event.key == pygame.K_DOWN:
-            print("Down Key Pressed") #print to console
-            #pygame.draw.rect(screen, red, (590,200,150,150), 0)
+          if j.get_button(3):
+            print("BUTTON 3")
             buzz(player4_name, blue, white)
             lockout = True
 
-          if event.key == pygame.K_1:
-            p1_score += 1
 
-          if event.key == pygame.K_2:
-            p2_score += 1
-
-          if event.key == pygame.K_3:
-            p3_score += 1
-
-          if event.key == pygame.K_4:
-            p4_score += 1
-
-          if event.key == pygame.K_F1:
-            p1_score -= 1
-
-          if event.key == pygame.K_F2:
-            p2_score -= 1
-
-          if event.key == pygame.K_F3:
-            p3_score -= 1
-
-          if event.key == pygame.K_F4:
-            p4_score -= 1
+          # for event in pygame.event.get():
+      #
+      #   if event.type == pygame.QUIT:
+      #     pygame.quit()
+      #     sys.exit()# break out of loop1
+      2
+      3
+      4
+      #
+      #   #if event.key == pygame.K_LCTRL or K_RCTRL and K_q:
+      #     #pygame.quit()
+      #
+      #   if event.type == pygame.KEYDOWN:
+      #
+      #     if event.key == pygame.K_LEFT:
+      #       print("Left Key Pressed") #print to console
+      #       #pygame.draw.rect(screen, red, (20,200,150,150), 0)
+      #       buzz(player1_name, red, black)
+      #       player1_buzzer.play()
+      #       lockout = True
+      #
+      #     if event.key == pygame.K_RIGHT:
+      #       print("Right Key Pressed") #print to console
+      #       #pygame.draw.rect(screen, red, (210,200,150,150), 0)
+      #       buzz(player2_name, green, black)
+      #       player2_buzzer.play()
+      #       lockout = True
+      #
+      #     if event.key == pygame.K_UP:
+      #       print("Up Key Pressed") #print to console
+      #       #pygame.draw.rect(screen, red, (400,200,150,150), 0)
+      #       buzz(player3_name, yellow, black)
+      #       lockout = True
+      #
+      #     if event.key == pygame.K_DOWN:
+      #       print("Down Key Pressed") #print to console
+      #       #pygame.draw.rect(screen, red, (590,200,150,150), 0)
+      #       buzz(player4_name, blue, white)
+      #       lockout = True
+      #
+      #     if event.key == pygame.K_1:
+      #       p1_score += 1
+      #
+      #     if event.key == pygame.K_2:
+      #       p2_score += 1
+      #
+      #     if event.key == pygame.K_3:
+      #       p3_score += 1
+      #
+      #     if event.key == pygame.K_4:
+      #       p4_score += 1
+      #
+      #     if event.key == pygame.K_F1:
+      #       p1_score -= 1
+      #
+      #     if event.key == pygame.K_F2:
+      #       p2_score -= 1
+      #
+      #     if event.key == pygame.K_F3:
+      #       p3_score -= 1
+      #
+      #     if event.key == pygame.K_F4:
+      #       p4_score -= 1
 
 
     if lockout == True: #when buzzer has been pressed and buzzers are locked out
 
       #reset buzzers and make all squares black
       for event in pygame.event.get():
-        if event.key == pygame.K_RETURN:
+        if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_RETURN):
           lockout = False
           print("Reset")
           mainscreen()
