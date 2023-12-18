@@ -22,22 +22,31 @@ yellow = [255, 255, 0]
 
 
 font_title = pygame.font.SysFont("Ariel", 60)
-myfont = pygame.font.SysFont("Ariel", 90)
-name_font = pygame.font.SysFont("Ariel", 170)
+myfont = pygame.font.SysFont("Ariel", 180)
+name_font = pygame.font.SysFont("Ariel",400)
 
-label = font_title.render("Quiz Buzzer", 1, black)
+label = font_title.render("", 1, black)
 
 correct_answer_sound = pygame.mixer.Sound('correct_answer.wav')
 
 j = pygame.joystick.Joystick(0)
 j.init()
 
+p1_text_y = 200
+p2_text_y = 400
+p3_text_y = 600
+p4_text_y = 800
+
+player_names_x = 200
+player_scores_x = 1500
+
+
 def display_scores():
-  pygame.draw.rect(screen, white, (600,110,200,480), 0)
-  screen.blit(myfont.render(str(player_one.score), 1, black), (600,110))
-  screen.blit(myfont.render(str(player_two.score), 1, black), (600,240))
-  screen.blit(myfont.render(str(player_three.score), 1, black), (600,370))
-  screen.blit(myfont.render(str(player_four.score), 1, black), (600,500))
+  pygame.draw.rect(screen, white, (player_scores_x,p1_text_y,200,800), 0)
+  screen.blit(myfont.render(str(player_one.score), 1, black), (player_scores_x,p1_text_y))
+  screen.blit(myfont.render(str(player_two.score), 1, black), (player_scores_x,p2_text_y))
+  screen.blit(myfont.render(str(player_three.score), 1, black), (player_scores_x,p3_text_y))
+  screen.blit(myfont.render(str(player_four.score), 1, black), (player_scores_x,p4_text_y))
   pygame.display.flip()
 
 
@@ -45,10 +54,10 @@ def mainscreen():
   screen.fill(white)
   screen.blit(label, (100, 10)) #add title
   #add player names
-  screen.blit(player1, (100, 110))
-  screen.blit(player2, (100, 240))
-  screen.blit(player3, (100, 370))
-  screen.blit(player4, (100, 500))
+  screen.blit(player1, (player_names_x, p1_text_y))
+  screen.blit(player2, (player_names_x, p2_text_y))
+  screen.blit(player3, (player_names_x, p3_text_y))
+  screen.blit(player4, (player_names_x, p4_text_y))
 
 def correct(string, bg_colour, text_colour):
   screen.fill(bg_colour)
@@ -84,12 +93,24 @@ class Player():
                     pygame.quit()
                     sys.exit()# break out of loop
                 if event.type == KEYDOWN:
-                    if event.unicode.isalpha():
-                        self.name += event.unicode
-                    elif event.key == K_BACKSPACE:
-                        self.name = self.name[:-1]
-                    elif event.key == K_RETURN:
-                        return self.name
+                   if event.key == K_BACKSPACE and len(self.name) > 0:
+                      self.name = self.name[:-1]
+                   elif event.key == K_RETURN:
+                      return self.name
+                   elif event.key == K_TAB:
+                      self.name = ""
+                   else:
+                      self.name += event.unicode
+                  
+                    
+                # if event.type == KEYDOWN:
+                #     if event.unicode:#.isalpha():
+                #         self.name += event.unicode
+                #     elif event.key == K_BACKSPACE:
+                #         self.name = self.name[:-1]
+                #     elif event.key == K_RETURN:
+                #         return self.name
+                      
             screen.fill(black)
             block = name_font.render(self.name, True, white)
             rect = block.get_rect()
@@ -109,10 +130,10 @@ class Player():
 screen.fill(white) # fill screen white
 pygame.display.flip()        
 
-player_one = Player(black, red, 'buzzer1.wav', 'Red')
-player_two = Player(black, green, 'buzzer2.wav', 'Green')
-player_three = Player(black, yellow, 'buzzer3.wav', 'Yellow')
-player_four = Player(white, blue, 'buzzer1.wav', 'Blue')
+player_one = Player(black, red, 'ding.mp3', 'Red')
+player_two = Player(black, green, 'ding.mp3', 'Green')
+player_three = Player(black, yellow, 'ding.mp3', 'Yellow')
+player_four = Player(white, blue, 'ding.mp3', 'Blue')
 
 player1 = myfont.render(player_one.name, 1, black)
 player2 = myfont.render(player_two.name, 1, black)
@@ -168,17 +189,22 @@ def main():
           if j.get_button(0):
             player_one.buzz_in()
             lockout = True
+            active_player = player_one
           
           if j.get_button(1):
             player_two.buzz_in()
             lockout = True
+            active_player = player_two
+
           if j.get_button(2):
             player_three.buzz_in()
             lockout = True
+            active_player = player_three
           
           if j.get_button(3):
             player_four.buzz_in()
             lockout = True
+            active_player = player_four
 
     if lockout == True: #when buzzer has been pressed and buzzers are locked out
 
@@ -190,7 +216,7 @@ def main():
         if j.get_button(4):
            correct('CORRECT', green, black)
            correct_answer_sound.play()
-           time.sleep(3)
+           time.sleep(2)
            lockout = False
            mainscreen()
       
