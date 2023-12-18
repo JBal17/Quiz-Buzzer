@@ -59,7 +59,15 @@ def mainscreen():
   screen.blit(player3, (player_names_x, p3_text_y))
   screen.blit(player4, (player_names_x, p4_text_y))
 
-def correct(string, bg_colour, text_colour):
+def correct(string, bg_colour, text_colour, active_player):
+  if active_player == 1:
+     player_one.increase_score()
+  elif active_player == 2:
+     player_two.increase_score()
+  elif active_player == 3:
+     player_three.increase_score()
+  elif active_player == 4:
+     player_four.increase_score()
   screen.fill(bg_colour)
   block = name_font.render(string, True, text_colour)
   rect = block.get_rect()
@@ -140,13 +148,13 @@ player2 = myfont.render(player_two.name, 1, black)
 player3 = myfont.render(player_three.name, 1, black)
 player4 = myfont.render(player_four.name, 1, black)
 
+active_player = 0
+
 def main():
 # set initial state for lockout
   lockout = False
   mainscreen()
   while True: #loop until quit
-
-    active_player = ""
 
     if lockout == False:#when buzzers are in play
 
@@ -189,22 +197,22 @@ def main():
           if j.get_button(0):
             player_one.buzz_in()
             lockout = True
-            active_player = player_one
+            active_player = 1
           
           if j.get_button(1):
             player_two.buzz_in()
             lockout = True
-            active_player = player_two
+            active_player = 2
 
           if j.get_button(2):
             player_three.buzz_in()
             lockout = True
-            active_player = player_three
+            active_player = 3
           
           if j.get_button(3):
             player_four.buzz_in()
             lockout = True
-            active_player = player_four
+            active_player = 4
 
     if lockout == True: #when buzzer has been pressed and buzzers are locked out
 
@@ -214,7 +222,8 @@ def main():
 
 
         if j.get_button(4):
-           correct('CORRECT', green, black)
+           correct('CORRECT', green, black, active_player)
+           active_player = 0
            correct_answer_sound.play()
            time.sleep(2)
            lockout = False
